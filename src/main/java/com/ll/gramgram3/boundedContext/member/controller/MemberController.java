@@ -1,5 +1,6 @@
 package com.ll.gramgram3.boundedContext.member.controller;
 
+import com.ll.gramgram3.base.rq.Rq;
 import com.ll.gramgram3.base.rsData.RsData;
 import com.ll.gramgram3.boundedContext.member.entity.Member;
 import com.ll.gramgram3.boundedContext.member.service.MemberService;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/member")
 @RequiredArgsConstructor
 public class MemberController {
+    private Rq rq;
     private final MemberService memberService;
 
     @PreAuthorize("isAnonymous()")
@@ -45,12 +47,11 @@ public class MemberController {
         RsData<Member> joinRs = memberService.join(joinForm.getUsername(), joinForm.getPassword());
 
         if (joinRs.isFail()) {
-            return "common/js";
+            return rq.historyBack(joinRs.getMsg());
         }
 
-        String msg = joinRs.getMsg() + "\n로그인 후 이용해주세요.";
+        return rq.redirectWithMsg("/member/login",joinRs);
 
-        return "redirect:/member/login?msg=" + Ut.url.encode(msg);
     }
 
     @PreAuthorize("isAnonymous()")
