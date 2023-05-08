@@ -4,7 +4,6 @@ import com.ll.gramgram3.base.rq.Rq;
 import com.ll.gramgram3.base.rsData.RsData;
 import com.ll.gramgram3.boundedContext.member.entity.Member;
 import com.ll.gramgram3.boundedContext.member.service.MemberService;
-import com.ll.gramgram3.standard.util.Ut;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -21,8 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/member")
 @RequiredArgsConstructor
 public class MemberController {
-    private Rq rq;
     private final MemberService memberService;
+    private final Rq rq;
 
     @PreAuthorize("isAnonymous()")
     @GetMapping("/join")
@@ -47,11 +46,12 @@ public class MemberController {
         RsData<Member> joinRs = memberService.join(joinForm.getUsername(), joinForm.getPassword());
 
         if (joinRs.isFail()) {
-            return rq.historyBack(joinRs.getMsg());
+            // 뒤로가기 하고 거기서 메세지 보여줘
+            return rq.historyBack(joinRs);
         }
 
-        return rq.redirectWithMsg("/member/login",joinRs);
-
+        // 아래 링크로 리다이렉트(302, 이동) 하고 그 페이지에서 메세지 보여줘
+        return rq.redirectWithMsg("/member/login", joinRs);
     }
 
     @PreAuthorize("isAnonymous()")

@@ -12,6 +12,7 @@ public class Ut {
                 return str;
             }
         }
+
         public static String modifyQueryParam(String url, String paramName, String paramValue) {
             url = deleteQueryParam(url, paramName);
             url = addQueryParam(url, paramName, paramValue);
