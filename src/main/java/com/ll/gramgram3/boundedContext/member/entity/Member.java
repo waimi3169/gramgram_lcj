@@ -1,5 +1,6 @@
 package com.ll.gramgram3.boundedContext.member.entity;
 
+import com.ll.gramgram3.boundedContext.instaMember.entity.InstaMember;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -33,6 +34,10 @@ public class Member {
     private String username;
     private String password;
 
+    @OneToOne
+    @Setter
+    private InstaMember instaMember;
+
     public List<? extends GrantedAuthority> getGrantedAuthorities() {
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
 
@@ -43,5 +48,9 @@ public class Member {
         }
 
         return grantedAuthorities;
+    }
+
+    public boolean hasConnectedInstaMember() {
+        return instaMember != null;
     }
 }
